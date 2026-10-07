@@ -1,4 +1,4 @@
-🚀 [Project Name] - [Project Subtitle/Description] (Backend API)
+ALUMNİ
 Developed by: Ömer Efe Özdemir
 ![NET 8.0](https://img.shields.io/badge/.NET-8.0-512BD4?style=flat&logo=dotnet)
 ![EF Core](https://img.shields.io/badge/Entity%20Framework-Core-512BD4?style=flat&logo=dotnet)
@@ -70,7 +70,4 @@ Method	Endpoint	Description
 `GET`	`/api/data/statistics`	General system metrics and reports.
 `POST`	`/api/data`	Create a new entity/record in the system.
 ---
-✉️ Contact & Author
-Ömer Efe Özdemir
-GitHub: @your-username
-LinkedIn: Ömer Efe Özdemir
+
