@@ -1,0 +1,46 @@
+{
+  "info": {
+    "name": "Alumni Tracking System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [{ "key": "baseUrl", "value": "http://localhost:3000" }],
+  "item": [
+    { "name": "Health", "request": { "method": "GET", "url": "{{baseUrl}}/api/health" } },
+    { "name": "List users", "request": { "method": "GET", "url": "{{baseUrl}}/api/users" } },
+    { "name": "Get user", "request": { "method": "GET", "url": "{{baseUrl}}/api/users/1" } },
+    {
+      "name": "Create user",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/users",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Ayşe Yılmaz\",\n  \"email\": \"ayse@example.com\",\n  \"graduation_year\": 2022,\n  \"department\": \"Management Information Systems\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Replace user (PUT)",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/users/1",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Ayşe Yılmaz\",\n  \"email\": \"ayse.yilmaz@example.com\",\n  \"graduation_year\": 2022,\n  \"department\": \"Management Information Systems\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Update user (PATCH)",
+      "request": {
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/users/1",
+        "body": { "mode": "raw", "raw": "{\n  \"department\": \"Economics\"\n}" }
+      }
+    },
+    { "name": "Delete user", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/users/1" } }
+  ]
+}
