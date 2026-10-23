@@ -106,3 +106,4 @@ The **Forgetting Test** verifies that data is permanently stored in the PostgreS
    curl -s http://localhost:3000/api/users
    ```
    *Expected Result:* The record `test@persist.com` is retained because the named volume `pgdata` maps to `/var/lib/postgresql/data`.
+
