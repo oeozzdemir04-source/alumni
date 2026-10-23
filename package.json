@@ -1,0 +1,16 @@
+{
+  "name": "alumni",
+  "version": "0.4.0",
+  "description": "Alumni Tracking System - Istanbul University, Faculty of Economics, MIS",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon -L --watch src --ext js,ejs,json src/server.js"
+  },
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.0",
+    "nodemon": "^3.1.14",
+    "swagger-ui-express": "^5.0.1"
+  }
+}
