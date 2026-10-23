@@ -1,0 +1,26 @@
+name: alumni-node
+
+services:
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src:/app/src
+    depends_on:
+      - db
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgresql://alumni:alumni@db:5432/alumni
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: alumni
+      POSTGRES_PASSWORD: alumni
+      POSTGRES_DB: alumni
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
