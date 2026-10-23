@@ -4,14 +4,15 @@ A backend system to track Management Information Systems (MIS) graduates of Ista
 
 ## Tech Stack
 
-- **Backend:** Express (Node.js)
-- **Database:** PostgreSQL (container ready, integration in week 5)
+- **Backend:** Express (Node.js 22)
+- **Database:** PostgreSQL 16 (integrated in Week 5 via `pg` connection pool)
 - **Containerization:** Docker & Docker Compose
+- **Data Documentation:** [dld.md](dld.md) (Data Design Documentation)
 
-## Project decisions
+## Project Decisions
 
-- **Language: JavaScript (Node.js 22) with Express.** Why: one language from routes to views, small and easy to read in class. Bad at: no static typing, so a wrong field name only shows up at runtime.
-- **Database: PostgreSQL.** Why: alumni data is relational (people, degrees, employers) and PostgreSQL has strong constraints. Bad at: heavier to set up and run than a file-based database like SQLite. The `db` container is already in `docker-compose.yml`, but the code does not use it yet (week 5); until then data lives in memory and is lost on restart.
+- **Language: JavaScript (Node.js 22) with Express.** Why: one language from routes to views, small and easy to read in class.
+- **Database: PostgreSQL.** Why: alumni data is relational (people, degrees, employers) with strong constraints. Data is persisted to a named volume (`pgdata`), passing the *Forgetting Test*. See [dld.md](dld.md) for detailed schemas and migration strategy.
 - **Views: EJS** server-side templates.
 - **Containerization: Docker & Docker Compose.**
 
@@ -19,18 +20,40 @@ A backend system to track Management Information Systems (MIS) graduates of Ista
 
 1. Get the project folder (clone the repository and `cd` into it).
 
-2. Start the system:
+2. Set up environment variables:
    ```bash
-   docker compose up
+   cp .env.example .env
    ```
 
-3. Open <http://localhost:3000>. API docs (Swagger UI):
+3. Start the system (App + PostgreSQL):
+   ```bash
+   docker compose up --build
+   ```
+
+4. Database Migrations & Seeding (if running locally or inside container):
+   ```bash
+   npm run migrate
+   npm run seed
+   ```
+
+5. Open <http://localhost:3000>. API docs (Swagger UI):
    ```
    http://localhost:3000/api/swagger
    ```
    (`/docs` redirects there; the document in `src/docs/swagger.js` is updated with every new endpoint)
 
 Without Docker: `npm install && npm start`.
+
+## Database Design & The Forgetting Test
+
+Full database schemas, tables, relationships, and migration details are documented in **[dld.md](dld.md)**.
+
+### The Forgetting Test
+Data persistence is tested across container restarts:
+1. Create a record via `POST /api/users`.
+2. Run `docker compose down`.
+3. Run `docker compose up -d`.
+4. Verify record exists via `GET /api/users`. Data is preserved by the `pgdata` volume.
 
 ## Endpoints
 
@@ -73,8 +96,6 @@ Announcement fields: `title`, `content`, `author`, `category`, `created_at`.
 
 HTML forms can only send GET and POST, so the web pages use `POST /.../{id}/edit` and `POST /.../{id}/delete` instead of PUT/PATCH/DELETE.
 
-> `/users` and `/api/users` both read/write the same in-memory `users` list in `src/models/User.js`. Similarly, `/announcements` and `/api/announcements` share `src/models/Announcement.js`.
-
 A Postman collection is in [postman/](postman/alumni.postman_collection.json).
 
 ## Project Architecture (MVC)
@@ -86,27 +107,33 @@ alumni/
 ├── src/
 │   ├── server.js                        # Starts the HTTP server
 │   ├── app.js                           # Wires routers, Swagger and views into Express
+│   ├── db/                              # Database layer (Week 5)
+│   │   ├── pool.js                      # PostgreSQL connection pool (pg)
+│   │   ├── migrate.js                   # Schema migration runner (DDL)
+│   │   └── seed.js                      # Factories and initial data seeders
 │   ├── controllers/
 │   │   ├── UserController.js            # UserController -> HTML pages under /users
 │   │   ├── ApiUserController.js         # ApiUserController -> JSON under /api/users
-│   │   ├── AnnouncementController.js    # AnnouncementController -> HTML pages under /announcements (Homework)
-│   │   └── ApiAnnouncementController.js # ApiAnnouncementController -> JSON under /api/announcements (Homework)
+│   │   ├── AnnouncementController.js    # AnnouncementController -> HTML pages under /announcements
+│   │   └── ApiAnnouncementController.js # ApiAnnouncementController -> JSON under /api/announcements
 │   ├── models/
-│   │   ├── User.js                      # In-memory users list + CRUD + validation
-│   │   └── Announcement.js              # In-memory announcements list + CRUD + validation (Homework)
+│   │   ├── User.js                      # PostgreSQL User model + validation + CRUD
+│   │   └── Announcement.js              # PostgreSQL Announcement model + validation + CRUD
 │   ├── routes/
 │   │   ├── basic.js                     # /, /about, /hello, /hello/:name, /sum/:a/:b
 │   │   ├── web.js                       # /users/* -> UserController
-│   │   ├── announcements.js             # /announcements/* -> AnnouncementController (Homework)
+│   │   ├── announcements.js             # /announcements/* -> AnnouncementController
 │   │   └── api.js                       # /api/* -> ApiUserController & ApiAnnouncementController
 │   ├── docs/
 │   │   └── swagger.js                   # OpenAPI document served at /api/swagger
 │   └── views/                           # View layer (EJS)
 │       ├── partials/                    # header, footer, user-form
 │       ├── users/                       # index, show, edit
-│       ├── announcements/               # index, show, edit (Homework)
+│       ├── announcements/               # index, show, edit
 │       └── home, about, error
 ├── postman/                             # Postman collection + workspace globals
+├── dld.md                               # Data Layer / Design Documentation
+├── .env.example                         # Example environment variables
 ├── Dockerfile
 ├── docker-compose.yml
 ├── package.json
@@ -115,9 +142,9 @@ alumni/
 
 | Layer | Location | Responsibility |
 | --- | --- | --- |
-| **Model** | `src/models/User.js`, `src/models/Announcement.js` | In-memory data store with validation and CRUD methods (`create`, `all`, `find`, `update`, `partialUpdate`, `delete`). |
-| **View** | `src/views/` (`home`, `about`, `users/*`, `announcements/*`) | The HTML pages returned to the browser via EJS. For API routes, JSON responses act as the view. |
-| **Controller** | `src/controllers/` (`UserController`, `ApiUserController`, `AnnouncementController`, `ApiAnnouncementController`) | Handles HTTP requests, invokes Models for data logic, and returns HTML renders or JSON responses. |
+| **Model** | `src/models/User.js`, `src/models/Announcement.js` | Relational data persistence with PostgreSQL connection pool (`src/db/pool.js`) and CRUD queries. |
+| **View** | `src/views/` (`home`, `about`, `users/*`, `announcements/*`) | HTML pages returned to the browser via EJS. For API routes, JSON responses act as the view. |
+| **Controller** | `src/controllers/` (`UserController`, `ApiUserController`, `AnnouncementController`, `ApiAnnouncementController`) | Handles HTTP requests, invokes Models asynchronously, and returns HTML renders or JSON responses. |
 
 ## Status
 

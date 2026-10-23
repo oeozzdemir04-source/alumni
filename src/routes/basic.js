@@ -3,16 +3,24 @@ const User = require('../models/User');
 const Announcement = require('../models/Announcement');
 const router = express.Router();
 
-router.get('/', (req, res) => res.render('home', {
-  total: User.all().length,
-  totalAnnouncements: Announcement.all().length,
-}));
+router.get('/', async (req, res) => {
+  const users = await User.all();
+  const announcements = await Announcement.all();
+  res.render('home', {
+    total: users.length,
+    totalAnnouncements: announcements.length,
+  });
+});
 
 router.get('/about', (req, res) => res.render('about'));
 
 router.get('/hello', (req, res) => res.send('Hello, World!'));
 
-router.get('/hello/:name', (req, res) => res.send(`Hello ${req.params.name}`));
+router.get('/hello/:name', (req, res) => {
+  const name = req.params.name;
+  const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
+  res.send(`Hello, ${formattedName}!`);
+});
 
 router.get('/sum/:number1/:number2', (req, res) => {
   const a = Number(req.params.number1);

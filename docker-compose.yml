@@ -4,23 +4,33 @@ services:
   api:
     build: .
     ports:
-      - "3000:3000"
+      - "${PORT:-3000}:3000"
     volumes:
       - ./src:/app/src
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    env_file:
+      - .env.example
     environment:
       PORT: 3000
-      DATABASE_URL: postgresql://alumni:alumni@db:5432/alumni
+      DATABASE_URL: postgresql://${POSTGRES_USER:-alumni}:${POSTGRES_PASSWORD:-alumni}@db:5432/${POSTGRES_DB:-alumni}
 
   db:
-    image: postgres:16
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
     environment:
-      POSTGRES_USER: alumni
-      POSTGRES_PASSWORD: alumni
-      POSTGRES_DB: alumni
+      POSTGRES_USER: ${POSTGRES_USER:-alumni}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-alumni}
+      POSTGRES_DB: ${POSTGRES_DB:-alumni}
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-alumni} -d ${POSTGRES_DB:-alumni}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   pgdata:
