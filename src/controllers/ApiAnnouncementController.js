@@ -37,3 +37,4 @@ const ApiAnnouncementController = {
 };
 
 module.exports = ApiAnnouncementController;
+

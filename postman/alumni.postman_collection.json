@@ -41,6 +41,21 @@
         "body": { "mode": "raw", "raw": "{\n  \"department\": \"Economics\"\n}" }
       }
     },
-    { "name": "Delete user", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/users/1" } }
+    { "name": "Delete user", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/users/1" } },
+    { "name": "List announcements", "request": { "method": "GET", "url": "{{baseUrl}}/api/announcements" } },
+    { "name": "Get announcement", "request": { "method": "GET", "url": "{{baseUrl}}/api/announcements/1" } },
+    {
+      "name": "Create announcement",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/announcements",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Alumni Meetup 2026\",\n  \"author\": \"IU MIS\",\n  \"category\": \"Event\",\n  \"content\": \"Annual gathering at the campus.\"\n}"
+        }
+      }
+    },
+    { "name": "Delete announcement", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/announcements/1" } }
   ]
 }

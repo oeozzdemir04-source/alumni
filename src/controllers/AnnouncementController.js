@@ -56,3 +56,4 @@ const AnnouncementController = {
 };
 
 module.exports = AnnouncementController;
+

@@ -70,3 +70,4 @@ function apply(id, data, partial) {
 }
 
 module.exports = Announcement;
+
