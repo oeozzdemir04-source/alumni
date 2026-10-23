@@ -1,0 +1,58 @@
+<%- include('../partials/header', { active: 'announcements', title: 'Announcements' }) %>
+<main class="page">
+  <div class="head">
+    <div>
+      <div class="eyebrow">Bulletin</div>
+      <h1>Announcements</h1>
+    </div>
+    <span class="muted"><%= announcements.length %> published</span>
+  </div>
+
+  <% if (announcements.length === 0) { %>
+    <div class="empty">No announcements yet. Use the form below to post the first announcement.</div>
+  <% } else { %>
+    <div class="people">
+      <% announcements.forEach(a => { %>
+        <article class="person">
+          <h3><%= a.title %></h3>
+          <div class="meta">By <%= a.author %> &middot; <%= a.created_at %></div>
+          <p style="margin: 8px 0 12px; font-size: 14px;"><%= a.content %></p>
+          <div style="margin-bottom:12px">
+            <span class="tag"><%= a.category %></span>
+            <span class="tag">#<%= a.id %></span>
+          </div>
+          <div class="ops">
+            <a class="btn btn-line btn-small" href="/announcements/<%= a.id %>">View</a>
+            <a class="btn btn-line btn-small" href="/announcements/<%= a.id %>/edit">Edit</a>
+            <form class="inline" method="post" action="/announcements/<%= a.id %>/delete">
+              <button type="submit" class="btn btn-danger btn-small">Delete</button>
+            </form>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+  <% } %>
+
+  <h2>New Announcement</h2>
+  <% if (errors.length) { %>
+    <div class="problem"><ul><% errors.forEach(e => { %><li><%= e %></li><% }) %></ul></div>
+  <% } %>
+  <div class="formbox">
+    <form class="stack" method="post" action="/announcements">
+      <label for="title">Title *</label>
+      <input id="title" name="title" value="<%= form.title || '' %>" required />
+
+      <label for="author">Author *</label>
+      <input id="author" name="author" value="<%= form.author || '' %>" required />
+
+      <label for="category">Category</label>
+      <input id="category" name="category" value="<%= form.category || '' %>" placeholder="e.g. Event, Job, General" />
+
+      <label for="content">Content *</label>
+      <textarea id="content" name="content" rows="4" style="padding:9px 10px; border:1px solid #cfc7b8; border-radius:4px; font:inherit;" required><%= form.content || '' %></textarea>
+
+      <button type="submit" class="btn btn-fill">Post announcement</button>
+    </form>
+  </div>
+</main>
+<%- include('../partials/footer') %>

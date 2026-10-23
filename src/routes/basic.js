@@ -1,8 +1,12 @@
 const express = require('express');
 const User = require('../models/User');
+const Announcement = require('../models/Announcement');
 const router = express.Router();
 
-router.get('/', (req, res) => res.render('home', { total: User.all().length }));
+router.get('/', (req, res) => res.render('home', {
+  total: User.all().length,
+  totalAnnouncements: Announcement.all().length,
+}));
 
 router.get('/about', (req, res) => res.render('about'));
 

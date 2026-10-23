@@ -1,0 +1,27 @@
+<%- include('../partials/header', { active: 'announcements', title: 'Edit ' + (announcement.title || '') }) %>
+<main class="page narrow">
+  <div class="eyebrow">Announcement #<%= announcement.id %></div>
+  <h1>Edit Announcement</h1>
+  <% if (errors.length) { %>
+    <div class="problem"><ul><% errors.forEach(e => { %><li><%= e %></li><% }) %></ul></div>
+  <% } %>
+  <div class="formbox">
+    <form class="stack" method="post" action="/announcements/<%= announcement.id %>/edit">
+      <label for="title">Title *</label>
+      <input id="title" name="title" value="<%= announcement.title || '' %>" required />
+
+      <label for="author">Author *</label>
+      <input id="author" name="author" value="<%= announcement.author || '' %>" required />
+
+      <label for="category">Category</label>
+      <input id="category" name="category" value="<%= announcement.category || '' %>" />
+
+      <label for="content">Content *</label>
+      <textarea id="content" name="content" rows="4" style="padding:9px 10px; border:1px solid #cfc7b8; border-radius:4px; font:inherit;" required><%= announcement.content || '' %></textarea>
+
+      <button type="submit" class="btn btn-fill">Save changes</button>
+    </form>
+  </div>
+  <p><a href="/announcements">&larr; Back to announcements</a></p>
+</main>
+<%- include('../partials/footer') %>

@@ -6,6 +6,7 @@ const swaggerDocument = require('./docs/swagger');
 const basicRoutes = require('./routes/basic');
 const apiRoutes = require('./routes/api');
 const webRoutes = require('./routes/web');
+const announcementRoutes = require('./routes/announcements');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use('/api/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.get('/docs', (req, res) => res.redirect('/api/swagger'));
 app.use('/api', apiRoutes);
 app.use('/users', webRoutes);
+app.use('/announcements', announcementRoutes);
 app.use('/', basicRoutes);
 
 app.use((req, res) => {

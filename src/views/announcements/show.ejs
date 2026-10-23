@@ -1,0 +1,19 @@
+<%- include('../partials/header', { active: 'announcements', title: announcement.title }) %>
+<main class="page narrow">
+  <div class="eyebrow">Announcement #<%= announcement.id %> &middot; <%= announcement.category %></div>
+  <h1><%= announcement.title %></h1>
+  <div class="muted" style="margin-bottom: 20px;">Posted by <%= announcement.author %> on <%= announcement.created_at %></div>
+  
+  <div class="facts" style="padding: 16px 20px; line-height: 1.6; font-size: 15px;">
+    <%= announcement.content %>
+  </div>
+
+  <div class="actions">
+    <a class="btn btn-fill" href="/announcements/<%= announcement.id %>/edit">Edit</a>
+    <a class="btn btn-line" href="/announcements">All announcements</a>
+    <form class="inline" method="post" action="/announcements/<%= announcement.id %>/delete">
+      <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+  </div>
+</main>
+<%- include('../partials/footer') %>
