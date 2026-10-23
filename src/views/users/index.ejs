@@ -1,0 +1,44 @@
+<%- include('../partials/header', { active: 'users', title: 'Alumni' }) %>
+<main class="page">
+  <div class="head">
+    <div>
+      <div class="eyebrow">Register</div>
+      <h1>Alumni</h1>
+    </div>
+    <span class="muted"><%= users.length %> on record</span>
+  </div>
+
+  <% if (users.length === 0) { %>
+    <div class="empty">Nobody has been added yet. Use the form below to add the first graduate.</div>
+  <% } else { %>
+    <div class="people">
+      <% users.forEach(u => { %>
+        <article class="person">
+          <h3><%= u.name %></h3>
+          <div class="meta"><%= u.email %></div>
+          <div style="margin-bottom:12px">
+            <span class="tag">Class of <%= u.graduation_year %></span>
+            <span class="tag"><%= u.department %></span>
+            <span class="tag">#<%= u.id %></span>
+          </div>
+          <div class="ops">
+            <a class="btn btn-line btn-small" href="/users/<%= u.id %>">View</a>
+            <a class="btn btn-line btn-small" href="/users/<%= u.id %>/edit">Edit</a>
+            <form class="inline" method="post" action="/users/<%= u.id %>/delete">
+              <button type="submit" class="btn btn-danger btn-small">Delete</button>
+            </form>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+  <% } %>
+
+  <h2>Add a graduate</h2>
+  <% if (errors.length) { %>
+    <div class="problem"><ul><% errors.forEach(e => { %><li><%= e %></li><% }) %></ul></div>
+  <% } %>
+  <div class="formbox">
+    <%- include('../partials/user-form', { user: form, action: '/users', submit: 'Add graduate' }) %>
+  </div>
+</main>
+<%- include('../partials/footer') %>

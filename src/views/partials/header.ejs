@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= typeof title !== 'undefined' ? title + ' | ' : '' %>Alumni Tracking System</title>
+  <style>
+    :root {
+      --paper: #faf7f2; --card: #ffffff; --ink: #1f2933; --soft: #6b7280; --line: #e7e1d6;
+      --brand: #8a1c2b; --brand-dark: #6d1522; --sand: #f1ebe0; --ok: #2f7d5b;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: "Segoe UI", system-ui, sans-serif; line-height: 1.55; }
+    h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; font-weight: 700; margin: 0 0 12px; }
+    a { color: var(--brand); }
+
+    .topbar { background: var(--brand); color: #fff; }
+    .topbar-inner { max-width: 1000px; margin: 0 auto; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .logo { font-family: Georgia, serif; font-size: 20px; font-weight: 700; color: #fff; text-decoration: none; letter-spacing: 0.02em; }
+    .logo small { display: block; font-family: "Segoe UI", sans-serif; font-size: 11px; font-weight: 400; opacity: 0.8; letter-spacing: 0.08em; text-transform: uppercase; }
+    .menu a { color: #fff; text-decoration: none; margin-left: 20px; font-size: 14px; padding-bottom: 3px; opacity: 0.85; }
+    .menu a:hover, .menu a.on { opacity: 1; border-bottom: 2px solid #fff; }
+
+    .page { max-width: 1000px; margin: 0 auto; padding: 36px 20px 64px; }
+    .narrow { max-width: 640px; }
+    .lead { color: var(--soft); font-size: 17px; max-width: 620px; }
+    .eyebrow { text-transform: uppercase; letter-spacing: 0.12em; font-size: 12px; color: var(--brand); font-weight: 600; margin-bottom: 8px; }
+
+    .banner { background: var(--sand); border: 1px solid var(--line); border-radius: 6px; padding: 40px 36px; margin-bottom: 28px; }
+    .banner h1 { font-size: 34px; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+    .btn { display: inline-block; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-size: 14px; font-weight: 600; border: 1px solid var(--brand); cursor: pointer; font-family: inherit; }
+    .btn-fill { background: var(--brand); color: #fff; }
+    .btn-fill:hover { background: var(--brand-dark); }
+    .btn-line { background: transparent; color: var(--brand); }
+    .btn-small { padding: 4px 10px; font-size: 13px; }
+    .btn-danger { background: transparent; color: #b42318; border-color: #b42318; }
+
+    .row3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .box { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 20px; }
+    .box h3 { font-size: 16px; }
+    .box p { margin: 0; color: var(--soft); font-size: 14px; }
+    .figure { font-family: Georgia, serif; font-size: 40px; color: var(--brand); line-height: 1; margin-bottom: 6px; }
+
+    .head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+    .head h1 { margin: 0; }
+    .muted { color: var(--soft); font-size: 14px; }
+    .people { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 36px; }
+    .person { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--brand); border-radius: 6px; padding: 16px 18px; }
+    .person h3 { margin: 0; font-size: 18px; }
+    .person .meta { color: var(--soft); font-size: 14px; margin: 2px 0 12px; }
+    .person .tag { display: inline-block; background: var(--sand); border-radius: 3px; padding: 1px 8px; font-size: 12px; margin-right: 6px; }
+    .person .ops { display: flex; gap: 8px; align-items: center; }
+    .empty { background: var(--card); border: 1px dashed var(--line); border-radius: 6px; padding: 28px; text-align: center; color: var(--soft); margin-bottom: 36px; }
+
+    .formbox { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 24px; max-width: 460px; }
+    .formbox form, form.stack { display: grid; gap: 6px; }
+    form.inline { display: inline; }
+    label { font-size: 13px; font-weight: 600; margin-top: 8px; }
+    input { padding: 9px 10px; border: 1px solid #cfc7b8; border-radius: 4px; font: inherit; background: #fff; }
+    input:focus { outline: 2px solid rgba(138, 28, 43, 0.25); border-color: var(--brand); }
+    .formbox .btn { margin-top: 14px; justify-self: start; }
+    .problem { background: #fdecea; border: 1px solid #f3b8b0; color: #7a271a; border-radius: 4px; padding: 10px 16px; margin-bottom: 16px; max-width: 460px; }
+    .problem ul { margin: 0; padding-left: 18px; }
+    .facts { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 8px 20px; margin-bottom: 20px; }
+    .facts div { display: flex; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .facts div:last-child { border-bottom: none; }
+    .facts dt { width: 150px; color: var(--soft); font-size: 14px; }
+    .facts dd { margin: 0; }
+
+    .foot { border-top: 1px solid var(--line); text-align: center; color: var(--soft); font-size: 13px; padding: 20px; }
+    @media (max-width: 700px) { .row3, .people { grid-template-columns: 1fr; } .menu a { margin: 0 14px 0 0; } .banner { padding: 26px 20px; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="logo" href="/">Alumni Tracking<small>Istanbul University &middot; MIS</small></a>
+      <nav class="menu">
+        <a href="/"<%- active === 'home' ? ' class="on"' : '' %>>Overview</a>
+        <a href="/users"<%- active === 'users' ? ' class="on"' : '' %>>Alumni</a>
+        <a href="/about"<%- active === 'about' ? ' class="on"' : '' %>>About</a>
+        <a href="/api/swagger">API</a>
+      </nav>
+    </div>
+  </header>

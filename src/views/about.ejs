@@ -1,0 +1,18 @@
+<%- include('partials/header', { active: 'about', title: 'About' }) %>
+<main class="page narrow">
+  <div class="eyebrow">About</div>
+  <h1>About this system</h1>
+  <p class="lead">
+    The Alumni Tracking System keeps a register of graduates of Istanbul University's
+    Management Information Systems programme. It is built step by step as the project for the
+    Web Programming course.
+  </p>
+  <dl class="facts">
+    <div><dt>Course</dt><dd>YBSB3001 Web Programming</dd></div>
+    <div><dt>Server</dt><dd>Node.js with Express</dd></div>
+    <div><dt>Data</dt><dd>In memory for now, PostgreSQL planned</dd></div>
+    <div><dt>Runs with</dt><dd>docker compose up</dd></div>
+  </dl>
+  <a class="btn btn-line" href="/">Back to overview</a>
+</main>
+<%- include('partials/footer') %>

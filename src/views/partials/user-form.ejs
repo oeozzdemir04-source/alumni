@@ -1,0 +1,11 @@
+<form method="post" action="<%= action %>">
+  <label for="f-name">Full name</label>
+  <input id="f-name" type="text" name="name" value="<%= user.name ?? '' %>" required />
+  <label for="f-email">Email</label>
+  <input id="f-email" type="email" name="email" value="<%= user.email ?? '' %>" required />
+  <label for="f-year">Graduation year</label>
+  <input id="f-year" type="number" name="graduation_year" value="<%= user.graduation_year ?? '' %>" required />
+  <label for="f-dept">Department</label>
+  <input id="f-dept" type="text" name="department" value="<%= user.department ?? '' %>" required />
+  <button class="btn btn-fill" type="submit"><%= submit %></button>
+</form>

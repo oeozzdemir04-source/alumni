@@ -1,0 +1,22 @@
+<%- include('partials/header', { active: 'home' }) %>
+<main class="page">
+  <section class="banner">
+    <div class="eyebrow">Faculty of Economics</div>
+    <h1>Where did our graduates go?</h1>
+    <p class="lead">
+      A simple register of Management Information Systems alumni: who they are, when they graduated
+      and what department they came from.
+    </p>
+    <div class="actions">
+      <a class="btn btn-fill" href="/users">Browse alumni</a>
+      <a class="btn btn-line" href="/api/swagger">Open API docs</a>
+    </div>
+  </section>
+
+  <section class="row3">
+    <div class="box"><div class="figure"><%= total %></div><h3>Alumni on record</h3><p>Counted live from the register.</p></div>
+    <div class="box"><h3>Web pages</h3><p>Add, view, edit and remove alumni straight from the browser.</p></div>
+    <div class="box"><h3>JSON API</h3><p>The same register is available to other programs at <code>/api/users</code>.</p></div>
+  </section>
+</main>
+<%- include('partials/footer') %>

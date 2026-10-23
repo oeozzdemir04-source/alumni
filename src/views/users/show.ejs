@@ -1,0 +1,15 @@
+<%- include('../partials/header', { active: 'users', title: user.name }) %>
+<main class="page narrow">
+  <div class="eyebrow">Graduate #<%= user.id %></div>
+  <h1><%= user.name %></h1>
+  <dl class="facts">
+    <div><dt>Email</dt><dd><%= user.email %></dd></div>
+    <div><dt>Graduation year</dt><dd><%= user.graduation_year %></dd></div>
+    <div><dt>Department</dt><dd><%= user.department %></dd></div>
+  </dl>
+  <div class="actions">
+    <a class="btn btn-fill" href="/users/<%= user.id %>/edit">Edit</a>
+    <a class="btn btn-line" href="/users">All alumni</a>
+  </div>
+</main>
+<%- include('../partials/footer') %>
