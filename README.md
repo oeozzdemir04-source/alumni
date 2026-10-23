@@ -55,12 +55,25 @@ Without Docker: `npm install && npm start`.
 | PUT | `/api/users/{id}` | Replace a user (all fields required) |
 | PATCH | `/api/users/{id}` | Partially update a user |
 | DELETE | `/api/users/{id}` | Delete a user |
+| GET | `/announcements` | List announcements + "New Announcement" form (`Announcement` tag) |
+| POST | `/announcements` | Create an announcement from the form |
+| GET | `/announcements/{id}` | Announcement detail page |
+| GET | `/announcements/{id}/edit` | Pre-filled announcement edit form |
+| POST | `/announcements/{id}/edit` | Update an announcement from the form |
+| POST | `/announcements/{id}/delete` | Delete an announcement from the form |
+| GET | `/api/announcements` | List all announcements (`ApiAnnouncement` tag) |
+| GET | `/api/announcements/{id}` | Get a single announcement |
+| POST | `/api/announcements` | Create a new announcement |
+| PUT | `/api/announcements/{id}` | Replace an announcement |
+| PATCH | `/api/announcements/{id}` | Partially update an announcement |
+| DELETE | `/api/announcements/{id}` | Delete an announcement |
 
-User fields: `name`, `email`, `graduation_year`, `department`.
+User fields: `name`, `email`, `graduation_year`, `department`.  
+Announcement fields: `title`, `content`, `author`, `category`, `created_at`.
 
-HTML forms can only send GET and POST, so the web pages use `POST /users/{id}/edit` and `POST /users/{id}/delete` instead of PUT/PATCH/DELETE.
+HTML forms can only send GET and POST, so the web pages use `POST /.../{id}/edit` and `POST /.../{id}/delete` instead of PUT/PATCH/DELETE.
 
-> `/users` and `/api/users` both read/write the same in-memory `users` list in `src/models/User.js`, so a record created through one is visible through the other.
+> `/users` and `/api/users` both read/write the same in-memory `users` list in `src/models/User.js`. Similarly, `/announcements` and `/api/announcements` share `src/models/Announcement.js`.
 
 A Postman collection is in [postman/](postman/alumni.postman_collection.json).
 
@@ -75,18 +88,23 @@ alumni/
 │   ├── app.js                           # Wires routers, Swagger and views into Express
 │   ├── controllers/
 │   │   ├── UserController.js            # UserController -> HTML pages under /users
-│   │   └── ApiUserController.js         # ApiUserController -> JSON under /api/users
+│   │   ├── ApiUserController.js         # ApiUserController -> JSON under /api/users
+│   │   ├── AnnouncementController.js    # AnnouncementController -> HTML pages under /announcements (Homework)
+│   │   └── ApiAnnouncementController.js # ApiAnnouncementController -> JSON under /api/announcements (Homework)
 │   ├── models/
-│   │   └── User.js                      # In-memory users list + CRUD + validation
+│   │   ├── User.js                      # In-memory users list + CRUD + validation
+│   │   └── Announcement.js              # In-memory announcements list + CRUD + validation (Homework)
 │   ├── routes/
 │   │   ├── basic.js                     # /, /about, /hello, /hello/:name, /sum/:a/:b
 │   │   ├── web.js                       # /users/* -> UserController
-│   │   └── api.js                       # /api/* -> ApiUserController
+│   │   ├── announcements.js             # /announcements/* -> AnnouncementController (Homework)
+│   │   └── api.js                       # /api/* -> ApiUserController & ApiAnnouncementController
 │   ├── docs/
 │   │   └── swagger.js                   # OpenAPI document served at /api/swagger
 │   └── views/                           # View layer (EJS)
 │       ├── partials/                    # header, footer, user-form
 │       ├── users/                       # index, show, edit
+│       ├── announcements/               # index, show, edit (Homework)
 │       └── home, about, error
 ├── postman/                             # Postman collection + workspace globals
 ├── Dockerfile
@@ -97,9 +115,9 @@ alumni/
 
 | Layer | Location | Responsibility |
 | --- | --- | --- |
-| **Model** | `src/models/User.js` — the in-memory `users` list and `create`/`all`/`find`/`update`/`partialUpdate`/`delete` | Defines the shape/validation of the data and holds + manipulates it (no database yet). |
-| **View** | `src/views/` — `home`, `about`, `users/index`, `users/show`, `users/edit` | The HTML pages returned to the browser. For the JSON API routes, the JSON response itself acts as the "view" served to API clients (Postman, Swagger UI). |
-| **Controller** | `src/controllers/UserController.js` (mounted at `/users`) and `src/controllers/ApiUserController.js` (mounted at `/api/users`) — two independent controllers, each with its own CRUD methods; neither inherits from the other | Receives the HTTP request, calls the Model, and returns HTML or JSON. `app.js` mounts both routers. |
+| **Model** | `src/models/User.js`, `src/models/Announcement.js` | In-memory data store with validation and CRUD methods (`create`, `all`, `find`, `update`, `partialUpdate`, `delete`). |
+| **View** | `src/views/` (`home`, `about`, `users/*`, `announcements/*`) | The HTML pages returned to the browser via EJS. For API routes, JSON responses act as the view. |
+| **Controller** | `src/controllers/` (`UserController`, `ApiUserController`, `AnnouncementController`, `ApiAnnouncementController`) | Handles HTTP requests, invokes Models for data logic, and returns HTML renders or JSON responses. |
 
 ## Status
 
