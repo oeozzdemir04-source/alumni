@@ -1,8 +1,11 @@
-<%- include('partials/header', { active: '', title: 'Not found' }) %>
+<%- include('partials/header', { active: '', title: typeof title !== 'undefined' ? title : 'Error' }) %>
 <main class="page narrow">
-  <div class="eyebrow">Oops</div>
-  <h1><%= message %></h1>
-  <p class="lead">We could not find what you were looking for.</p>
-  <a class="btn btn-fill" href="/users">Go to alumni</a>
+  <div class="eyebrow">5xx Guardian</div>
+  <h1><%= typeof message !== 'undefined' ? message : 'Something went wrong' %></h1>
+  <p class="lead"><%= typeof reason !== 'undefined' ? reason : 'An unexpected error occurred while processing your request.' %></p>
+  <div class="actions" style="margin-top: 24px;">
+    <a class="btn btn-fill" href="/users">Go to alumni</a>
+    <a class="btn btn-line" href="/">Home</a>
+  </div>
 </main>
 <%- include('partials/footer') %>

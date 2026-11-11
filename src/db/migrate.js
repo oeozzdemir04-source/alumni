@@ -18,6 +18,16 @@ CREATE TABLE IF NOT EXISTS announcements (
   category VARCHAR(100) DEFAULT 'General',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS job_postings (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(120) NOT NULL,
+  company VARCHAR(255) NOT NULL,
+  city VARCHAR(100),
+  description TEXT,
+  user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
 `;
 
 async function migrate() {
@@ -38,4 +48,3 @@ if (require.main === module) {
 }
 
 module.exports = { migrate };
-

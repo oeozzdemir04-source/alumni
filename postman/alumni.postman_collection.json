@@ -56,6 +56,91 @@
         }
       }
     },
-    { "name": "Delete announcement", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/announcements/1" } }
+    { "name": "Delete announcement", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/announcements/1" } },
+    { "name": "List job postings", "request": { "method": "GET", "url": "{{baseUrl}}/api/jobs" } },
+    { "name": "Get job posting", "request": { "method": "GET", "url": "{{baseUrl}}/api/jobs/1" } },
+    {
+      "name": "Create job posting",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/jobs",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Junior Software Engineer\",\n  \"company\": \"Tech Solutions Inc.\",\n  \"city\": \"Istanbul\",\n  \"description\": \"Full stack developer needed.\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Create job for user (POST /api/users/1/jobs)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/users/1/jobs",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"MIS IT Specialist\",\n  \"company\": \"Global Logistics\",\n  \"city\": \"Izmir\"\n}"
+        }
+      }
+    },
+    { "name": "List jobs for user (GET /api/users/1/jobs)", "request": { "method": "GET", "url": "{{baseUrl}}/api/users/1/jobs" } },
+    { "name": "Delete job posting", "request": { "method": "DELETE", "url": "{{baseUrl}}/api/jobs/1" } },
+    {
+      "name": "Invalid: Missing Title (Expect 400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/jobs",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"company\": \"Tech Solutions Inc.\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Invalid: Title Exceeds 120 Chars (Expect 400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/jobs",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"This is an extremely long job title that definitely exceeds the maximum permitted limit of one hundred and twenty characters set in our data design documentation rules.\",\n  \"company\": \"Tech Solutions Inc.\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Invalid: Missing Company (Expect 400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/jobs",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Frontend Specialist\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Invalid: 404 Guardian - Unknown Route (Expect 404 with reason)",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/unknown-endpoint"
+      }
+    },
+    {
+      "name": "Invalid: 404 Guardian - Non-existent Job ID (Expect 404 with reason)",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/jobs/999999"
+      }
+    },
+    {
+      "name": "Invalid: 5xx Guardian - Trigger Test Error (Expect 500 & logs/error.logs)",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/test-error"
+      }
+    }
   ]
 }

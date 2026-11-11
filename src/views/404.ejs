@@ -1,0 +1,33 @@
+<%- include('partials/header', { active: '', title: typeof title !== 'undefined' ? title : '404 Not Found' }) %>
+<main class="page narrow">
+  <div class="eyebrow">404 Guardian</div>
+  <h1><%= typeof message !== 'undefined' ? message : 'Page Not Found' %></h1>
+  <p class="lead"><%= typeof reason !== 'undefined' ? reason : 'The requested page or route could not be found.' %></p>
+
+  <div class="box" style="margin: 24px 0; background: var(--sand); border: 1px dashed var(--line);">
+    <p style="margin: 0; color: var(--ink);">
+      Redirecting you automatically to <a href="<%= typeof redirectUrl !== 'undefined' ? redirectUrl : '/users' %>"><strong>Alumni Directory</strong></a> in <span id="countdown" style="font-weight: 700; color: var(--brand);">5</span> seconds...
+    </p>
+  </div>
+
+  <div class="actions">
+    <a class="btn btn-fill" href="<%= typeof redirectUrl !== 'undefined' ? redirectUrl : '/users' %>">Go to alumni now</a>
+    <a class="btn btn-line" href="/">Back to overview</a>
+  </div>
+</main>
+
+<script>
+  let seconds = 5;
+  const target = "<%= typeof redirectUrl !== 'undefined' ? redirectUrl : '/users' %>";
+  const el = document.getElementById('countdown');
+  const timer = setInterval(() => {
+    seconds -= 1;
+    if (el) el.textContent = seconds;
+    if (seconds <= 0) {
+      clearInterval(timer);
+      window.location.href = target;
+    }
+  }, 1000);
+</script>
+
+<%- include('partials/footer') %>

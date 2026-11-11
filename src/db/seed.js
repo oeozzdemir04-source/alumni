@@ -18,6 +18,15 @@ const announcementFactory = (overrides = {}) => ({
   ...overrides,
 });
 
+const jobPostingFactory = (overrides = {}) => ({
+  title: 'Junior Software Engineer',
+  company: 'IU Tech Hub',
+  city: 'Istanbul',
+  description: 'Full-stack Node.js and PostgreSQL position for MIS graduates.',
+  user_id: 1,
+  ...overrides,
+});
+
 const initialUsers = [
   { name: 'Ayşe Yılmaz', email: 'ayse@example.com', graduation_year: 2022, department: 'Management Information Systems' },
   { name: 'Mehmet Kaya', email: 'mehmet@example.com', graduation_year: 2021, department: 'Management Information Systems' },
@@ -36,6 +45,30 @@ const initialAnnouncements = [
     content: 'Exciting opportunities for recent MIS graduates in frontend & backend development.',
     author: 'Career Center',
     category: 'Job',
+  },
+];
+
+const initialJobs = [
+  {
+    title: 'Node.js Backend Developer',
+    company: 'Fintech Solutions',
+    city: 'Istanbul',
+    description: 'Developing high-performance REST APIs with Express and PostgreSQL.',
+    user_id: 1,
+  },
+  {
+    title: 'IT Business Analyst',
+    company: 'Global Consultancy',
+    city: 'Ankara',
+    description: 'Bridging MIS knowledge with enterprise software solution delivery.',
+    user_id: 2,
+  },
+  {
+    title: 'Data Analyst',
+    company: 'E-Commerce Corp',
+    city: 'Remote',
+    description: 'Working with SQL analytics, dashboards, and reporting pipelines.',
+    user_id: 3,
   },
 ];
 
@@ -61,6 +94,14 @@ async function seed() {
       );
     }
 
+    for (const j of initialJobs) {
+      await query(
+        `INSERT INTO job_postings (title, company, city, description, user_id)
+         VALUES ($1, $2, $3, $4, $5);`,
+        [j.title, j.company, j.city, j.description, j.user_id]
+      );
+    }
+
     console.log('Seeding completed successfully.');
   } catch (err) {
     console.error('Seeding failed:', err.message);
@@ -74,5 +115,4 @@ if (require.main === module) {
     .catch(() => process.exit(1));
 }
 
-module.exports = { seed, userFactory, announcementFactory };
-
+module.exports = { seed, userFactory, announcementFactory, jobPostingFactory };

@@ -1,8 +1,8 @@
 # Data Design Documentation (DLD)
 
-This document describes the database design, schema specifications, migration strategy, and data persistence verification for the **Alumni Tracking System**.
+This document describes the database design, schema specifications, migration strategy, validation rules, and data persistence verification for the **Alumni Tracking System**.
 
-Refer to [README.md](README.md) for general project setup and API endpoint documentation.
+Refer to [README.md](README.md) for general project setup, middleware architecture, and API endpoint documentation.
 
 ---
 
@@ -14,7 +14,7 @@ Refer to [README.md](README.md) for general project setup and API endpoint docum
 
 ---
 
-## 2. Table Schemas
+## 2. Table Schemas & Validation Rules
 
 ### 2.1. `users` Table
 
@@ -68,18 +68,58 @@ CREATE TABLE IF NOT EXISTS announcements (
 
 ---
 
+### 2.3. `job_postings` Table (Week 06)
+
+Stores career and job opportunities posted by or for graduates.
+
+| Column | Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| `id` | `SERIAL` | `PRIMARY KEY` | Auto-incrementing unique identifier |
+| `title` | `VARCHAR(120)` | `NOT NULL` | Job title (Max 120 characters) |
+| `company` | `VARCHAR(255)` | `NOT NULL` | Hiring company or organization |
+| `city` | `VARCHAR(100)` | `NULL` | Office location or Remote (Optional) |
+| `description` | `TEXT` | `NULL` | Detailed job requirements (Optional) |
+| `user_id` | `INTEGER` | `FOREIGN KEY (users.id)` | Optional link to posting alumnus |
+| `created_at` | `TIMESTAMPTZ` | `DEFAULT CURRENT_TIMESTAMP` | Posting creation timestamp |
+
+```sql
+CREATE TABLE IF NOT EXISTS job_postings (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(120) NOT NULL,
+  company VARCHAR(255) NOT NULL,
+  city VARCHAR(100),
+  description TEXT,
+  user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### Validation Rules for `JobPosting`:
+- `title`: **Required**. Must not be empty. **Maximum 120 characters**.
+  - Violations return `400 Bad Request` with `"title is required"` or `"title must not exceed 120 characters"`.
+- `company`: **Required**. Must not be empty.
+  - Violations return `400 Bad Request` with `"company is required"`.
+- `city`: **Optional** (nullable string).
+- `description`: **Optional** (nullable string/text).
+- `user_id`: **Optional** (nullable integer referencing `users.id`).
+
+---
+
 ## 3. Migrations & Seeding
 
 ### 3.1. Migration Runner
 - Location: `src/db/migrate.js`
 - Command: `npm run migrate`
-- Automatically executed via DDL SQL queries creating tables if they do not already exist (`CREATE TABLE IF NOT EXISTS`).
+- Creates all relational tables (`users`, `announcements`, `job_postings`) if they do not already exist (`CREATE TABLE IF NOT EXISTS`).
 
 ### 3.2. Factory & Seed
 - Location: `src/db/seed.js`
 - Command: `npm run seed`
-- Includes `userFactory` and `announcementFactory` for mock test data generation.
-- Inserts initial graduates and announcement bulletins safely (`ON CONFLICT (email) DO NOTHING`).
+- Includes:
+  - `userFactory`: Generates mock graduate objects.
+  - `announcementFactory`: Generates bulletin announcements.
+  - `jobPostingFactory`: Generates valid job postings adhering to length and field rules.
+- Inserts initial records safely (`ON CONFLICT (email) DO NOTHING` for users).
 
 ---
 
@@ -106,4 +146,3 @@ The **Forgetting Test** verifies that data is permanently stored in the PostgreS
    curl -s http://localhost:3000/api/users
    ```
    *Expected Result:* The record `test@persist.com` is retained because the named volume `pgdata` maps to `/var/lib/postgresql/data`.
-

@@ -1,0 +1,62 @@
+<%- include('../partials/header', { active: 'jobs', title: 'Job Postings' }) %>
+<main class="page">
+  <div class="head">
+    <div>
+      <div class="eyebrow">Career Portal</div>
+      <h1>Job Postings</h1>
+    </div>
+    <span class="muted"><%= jobs.length %> available</span>
+  </div>
+
+  <% if (jobs.length === 0) { %>
+    <div class="empty">No job postings yet. Use the form below to post the first job opportunity.</div>
+  <% } else { %>
+    <div class="people">
+      <% jobs.forEach(j => { %>
+        <article class="person">
+          <h3><%= j.title %></h3>
+          <div class="meta"><strong><%= j.company %></strong> &middot; <%= j.city || 'Location not specified' %></div>
+          <% if (j.description) { %>
+            <p style="margin: 8px 0 12px; font-size: 14px;"><%= j.description %></p>
+          <% } %>
+          <div style="margin-bottom:12px">
+            <span class="tag">#<%= j.id %></span>
+            <% if (j.user_id) { %>
+              <span class="tag">Posted by Alumni #<%= j.user_id %></span>
+            <% } %>
+          </div>
+          <div class="ops">
+            <a class="btn btn-line btn-small" href="/jobs/<%= j.id %>">View</a>
+            <a class="btn btn-line btn-small" href="/jobs/<%= j.id %>/edit">Edit</a>
+            <form class="inline" method="post" action="/jobs/<%= j.id %>/delete">
+              <button type="submit" class="btn btn-danger btn-small">Delete</button>
+            </form>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+  <% } %>
+
+  <h2>Post a Job</h2>
+  <% if (errors && errors.length) { %>
+    <div class="problem"><ul><% errors.forEach(e => { %><li><%= e %></li><% }) %></ul></div>
+  <% } %>
+  <div class="formbox">
+    <form class="stack" method="post" action="/jobs">
+      <label for="title">Job Title * (Max 120 chars)</label>
+      <input id="title" name="title" maxlength="120" value="<%= form.title || '' %>" placeholder="e.g. Junior Backend Developer" required />
+
+      <label for="company">Company *</label>
+      <input id="company" name="company" value="<%= form.company || '' %>" placeholder="e.g. Istanbul Tech Hub" required />
+
+      <label for="city">City (Optional)</label>
+      <input id="city" name="city" value="<%= form.city || '' %>" placeholder="e.g. Istanbul / Remote" />
+
+      <label for="description">Job Description (Optional)</label>
+      <textarea id="description" name="description" rows="4" style="padding:9px 10px; border:1px solid #cfc7b8; border-radius:4px; font:inherit;"><%= form.description || '' %></textarea>
+
+      <button type="submit" class="btn btn-fill">Submit posting</button>
+    </form>
+  </div>
+</main>
+<%- include('../partials/footer') %>

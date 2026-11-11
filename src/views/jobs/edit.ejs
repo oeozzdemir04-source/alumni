@@ -1,0 +1,27 @@
+<%- include('../partials/header', { active: 'jobs', title: 'Edit ' + (job.title || '') }) %>
+<main class="page narrow">
+  <div class="eyebrow">Job Posting #<%= job.id %></div>
+  <h1>Edit Job Posting</h1>
+  <% if (errors && errors.length) { %>
+    <div class="problem"><ul><% errors.forEach(e => { %><li><%= e %></li><% }) %></ul></div>
+  <% } %>
+  <div class="formbox">
+    <form class="stack" method="post" action="/jobs/<%= job.id %>/edit">
+      <label for="title">Job Title * (Max 120 chars)</label>
+      <input id="title" name="title" maxlength="120" value="<%= job.title || '' %>" required />
+
+      <label for="company">Company *</label>
+      <input id="company" name="company" value="<%= job.company || '' %>" required />
+
+      <label for="city">City (Optional)</label>
+      <input id="city" name="city" value="<%= job.city || '' %>" />
+
+      <label for="description">Job Description (Optional)</label>
+      <textarea id="description" name="description" rows="4" style="padding:9px 10px; border:1px solid #cfc7b8; border-radius:4px; font:inherit;"><%= job.description || '' %></textarea>
+
+      <button type="submit" class="btn btn-fill">Save changes</button>
+    </form>
+  </div>
+  <p><a href="/jobs">&larr; Back to job postings</a></p>
+</main>
+<%- include('../partials/footer') %>

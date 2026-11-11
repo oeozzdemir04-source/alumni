@@ -4,20 +4,21 @@
     <div class="eyebrow">Faculty of Economics</div>
     <h1>Where did our graduates go?</h1>
     <p class="lead">
-      A simple register of Management Information Systems alumni: who they are, when they graduated
-      and what department they came from.
+      A simple register of Management Information Systems alumni: who they are, when they graduated,
+      announcements, and career opportunities.
     </p>
     <div class="actions">
       <a class="btn btn-fill" href="/users">Browse alumni</a>
-      <a class="btn btn-line" href="/announcements">View announcements</a>
-      <a class="btn btn-line" href="/api/swagger">Open API docs</a>
+      <a class="btn btn-line" href="/announcements">Announcements</a>
+      <a class="btn btn-line" href="/jobs">Job Postings</a>
+      <a class="btn btn-line" href="/api/swagger">API Docs</a>
     </div>
   </section>
 
   <section class="row3">
     <div class="box"><div class="figure"><%= total %></div><h3>Alumni on record</h3><p>Counted live from the register.</p></div>
     <div class="box"><div class="figure"><%= typeof totalAnnouncements !== 'undefined' ? totalAnnouncements : 0 %></div><h3>Announcements</h3><p>Bulletins and notices for graduates.</p></div>
-    <div class="box"><h3>JSON API</h3><p>Available to other programs at <code>/api/users</code> and <code>/api/announcements</code>.</p></div>
+    <div class="box"><div class="figure"><%= typeof totalJobs !== 'undefined' ? totalJobs : 0 %></div><h3>Job Postings</h3><p>Career openings for alumni.</p></div>
   </section>
 </main>
 <%- include('partials/footer') %>

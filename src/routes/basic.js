@@ -1,15 +1,22 @@
 const express = require('express');
 const User = require('../models/User');
 const Announcement = require('../models/Announcement');
+const JobPosting = require('../models/JobPosting');
 const router = express.Router();
 
-router.get('/', async (req, res) => {
-  const users = await User.all();
-  const announcements = await Announcement.all();
-  res.render('home', {
-    total: users.length,
-    totalAnnouncements: announcements.length,
-  });
+router.get('/', async (req, res, next) => {
+  try {
+    const users = await User.all();
+    const announcements = await Announcement.all();
+    const jobs = await JobPosting.all();
+    res.render('home', {
+      total: users.length,
+      totalAnnouncements: announcements.length,
+      totalJobs: jobs.length,
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 router.get('/about', (req, res) => res.render('about'));
@@ -29,6 +36,16 @@ router.get('/sum/:number1/:number2', (req, res) => {
     return res.status(422).json({ detail: 'number1 and number2 must be integers' });
   }
   res.send(String(a + b));
+});
+
+// Generic 404 route for manual visits / test redirects
+router.get('/404', (req, res) => {
+  res.status(404).render('404', {
+    title: '404 Not Found',
+    message: 'Page Not Found',
+    reason: 'The requested route does not exist.',
+    redirectUrl: '/users',
+  });
 });
 
 module.exports = router;

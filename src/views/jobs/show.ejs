@@ -1,0 +1,24 @@
+<%- include('../partials/header', { active: 'jobs', title: job.title }) %>
+<main class="page narrow">
+  <div class="eyebrow">Job Posting #<%= job.id %></div>
+  <h1><%= job.title %></h1>
+  <div class="muted" style="margin-bottom: 20px;">
+    <strong><%= job.company %></strong> &middot; <%= job.city || 'Remote / Unspecified' %>
+    <% if (job.user_id) { %> &middot; Posted by Alumni #<%= job.user_id %><% } %>
+  </div>
+
+  <% if (job.description) { %>
+    <div class="facts" style="padding: 16px 20px; line-height: 1.6; font-size: 15px; margin-bottom: 24px;">
+      <%= job.description %>
+    </div>
+  <% } %>
+
+  <div class="actions">
+    <a class="btn btn-fill" href="/jobs/<%= job.id %>/edit">Edit</a>
+    <a class="btn btn-line" href="/jobs">All job postings</a>
+    <form class="inline" method="post" action="/jobs/<%= job.id %>/delete">
+      <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+  </div>
+</main>
+<%- include('../partials/footer') %>
